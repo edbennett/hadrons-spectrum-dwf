@@ -4,6 +4,17 @@
 using namespace Grid;
 using namespace Hadrons;
 
+struct SpectrumPar: Serializable
+{
+  GRID_SERIALIZABLE_CLASS_MEMBERS(SpectrumPar,
+				  int, Ls,
+				  double, mass,
+				  double, M5,
+				  double, b,
+				  double, c,
+				  std::string, cfg_prefix);
+};
+
 int main(int argc, char *argv[])
 {
     // parse command line //////////////////////////////////////////////////////
@@ -23,13 +34,14 @@ int main(int argc, char *argv[])
     // initialise application //////////////////////////////////////////////////
     Application            application;
     Application::GlobalPar globalPar;
+    SpectrumPar spectrumPar;
     
     // reading parameters
     {
         XmlReader reader(parameterFileName);
 
         read(reader, "global", globalPar);
-
+	read(reader, "spectrum", spectrumPar);
         // read other application-specific parameters here
     }
 
@@ -38,10 +50,8 @@ int main(int argc, char *argv[])
 
     // create modules //////////////////////////////////////////////////////////
 
-    // add modules here with application.createModule<...>(...)
-    // the one below is just an example
     MIO::LoadNersc::Par loadPar;
-    loadPar.file = "./cnfg/ckpoint_lat";
+    loadPar.file = spectrumPar.cfg_prefix;
     application.createModule<MIO::LoadNersc>("gauge", loadPar);
 
     MGauge::FundtoAdjoint::Par adjPar;
@@ -59,11 +69,11 @@ int main(int argc, char *argv[])
 
     MAction::MobiusDWFAdj::Par actionPar;
     actionPar.gauge = "adjgauge";
-    actionPar.Ls = 8;
-    actionPar.mass = 0.05;
-    actionPar.M5 = 1.8;
-    actionPar.b = 1.0;
-    actionPar.c = 0.0;
+    actionPar.Ls = spectrumPar.Ls;
+    actionPar.mass = spectrumPar.mass;
+    actionPar.M5 = spectrumPar.M5;
+    actionPar.b = spectrumPar.b;
+    actionPar.c = spectrumPar.c;
     actionPar.boundary = "1 1 1 -1";
     actionPar.twist = "0. 0. 0. 0.";
     application.createModule<MAction::MobiusDWFAdj>("mobiusadj", actionPar);
