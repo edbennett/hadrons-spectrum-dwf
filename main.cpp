@@ -96,6 +96,14 @@ int main(int argc, char *argv[])
     mesPar.gammas = "all";
     mesPar.sink = "sink";
     application.createModule<MContraction::MesonAdj>("meson_pt_ll", mesPar);
+
+    MContraction::WardIdentity::Par mresPar;
+    mresPar.output = "mesons/mres";
+    mresPar.action = "mobiusadj";
+    mresPar.source = "z2wall";
+    mresPar.prop = "prop_5d";
+    mresPar.mass = spectrumPar.mass;
+    application.createModule<MContraction::WardIdentityAdj>("mres", mresPar);
     
     // execution ///////////////////////////////////////////////////////////////
     try
