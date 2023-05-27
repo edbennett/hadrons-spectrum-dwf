@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([my-hadrons-app], [0.1], [name@domain.suf])
+AC_INIT([spectrum-mobius], [0.1], [e.j.bennett@swansea.ac.uk])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
